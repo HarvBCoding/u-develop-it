@@ -66,35 +66,6 @@ app.get('/api/candidate/:id', (req, res) => {
     });
 });
 
-// Delete a candidate
-app.delete('/api/candidate/:id', (req, res) => {
-    const sql = `DELETE FROM candidates WHERE id = ?`;
-    const params = [req.params.id];
-
-    // the ? denotes a placeholder, making it a prepared statement [ which execute the same SQL statements repeatedly using different values as the placeholder]
-    // the additional param following the statement provides values to use in place of the prepared statements placeholder
-    db.query(sql, params, (err, result) => {
-
-        if (err) {
-            res.statusMessage(400).json({ error:res.message });
-
-        } else if (!result.affectedRows) {
-            // if the user tries to delete a candidate that doesn't exist
-            res.json({
-                message: 'Candidate not found'
-            });
-
-        } else {
-            res.json({
-                message: 'deleted',
-                // will verify if any rows were changed
-                changes: result.affectedRows,
-                id: req.params.id
-            });
-        }
-    });
-});
-
 // create a candidate
 // ({ body }) is req.body to populate the candidate's data using object destructuring
 app.post('/api/candidate', ({ body }, res) => {
@@ -155,6 +126,37 @@ app.put('/api/candidate/:id', (req, res) => {
         }
     });
 });
+
+
+// Delete a candidate
+app.delete('/api/candidate/:id', (req, res) => {
+    const sql = `DELETE FROM candidates WHERE id = ?`;
+    const params = [req.params.id];
+
+    // the ? denotes a placeholder, making it a prepared statement [ which execute the same SQL statements repeatedly using different values as the placeholder]
+    // the additional param following the statement provides values to use in place of the prepared statements placeholder
+    db.query(sql, params, (err, result) => {
+
+        if (err) {
+            res.statusMessage(400).json({ error:res.message });
+
+        } else if (!result.affectedRows) {
+            // if the user tries to delete a candidate that doesn't exist
+            res.json({
+                message: 'Candidate not found'
+            });
+
+        } else {
+            res.json({
+                message: 'deleted',
+                // will verify if any rows were changed
+                changes: result.affectedRows,
+                id: req.params.id
+            });
+        }
+    });
+});
+
 
 // GET all parties
 app.get('/api/parties', (req, res) => {
