@@ -24,7 +24,11 @@ const db = mysql.createConnection(
 
 // get all candidates
 app.get('/api/candidates', (req, res) => {
-    const sql = `SELECT * FROM candidates`;
+    const sql = `SELECT candidates.*, parties.name
+        AS party_name
+        FROM candidates
+        LEFT JOIN parties
+        ON candidates.party_id = parties.id`;
 
     // the db object is using the query() method which runs the SQL query & executes the callback w/ all the resulting rows that match
     // the callback captures the responses from the query in 2 variables the err [error response] & rows [the database query response]
@@ -42,7 +46,12 @@ app.get('/api/candidates', (req, res) => {
 
 // GET a single candidate
 app.get('/api/candidate/:id', (req, res) => {
-    const sql = `SELECT * FROM candidates WHERE id = ?`;
+    const sql = `SELECT candidates.*, parties.name
+        AS party_name
+        FROM candidates
+        LEFT JOIN parties
+        ON candidates.party_id = parties.id
+        WHERE candidates.id = ?`;
     const params = [req.params.id];
 
     db.query(sql, params, (err, row) => {
